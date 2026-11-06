@@ -4,7 +4,12 @@
 
 An enterprise-grade OSINT API to verify Instagram account existence and retrieve rich profile intelligence (numerical User IDs, follower/following metrics, post counts, biography, HD avatar URLs, verified badges, account type, and profile links) by username, email address, or phone number.
 
-## Table of Contents
+> ⚠️ **Metadata Availability & Privacy Notice**:
+> Extracted metadata is **conditional and never guaranteed**. Availability strictly depends on:
+> 1. **Input Format**: Username queries inspect public profile data to extract numerical `user_id`, followers, following, post counts, biography, verified badge, and private status. Email queries probe the mobile registration collision gateway, returning existence confirmation and collision suggestions (`suggested_usernames`). Phone queries race concurrent CAA recovery and Mobile Web Bloks to verify presence.
+> 2. **Target Privacy Settings**: Private profiles, accounts restricted by age or region, and users who have disabled discoverability will omit public follower metrics, biographies, or custom media links.
+
+---
 - [Features](#features)
 - [Getting Started](#getting-started)
   - [1. Get API Key](#1-get-api-key)
@@ -110,7 +115,7 @@ curl --request POST \
 
 ## Response Format
 
-### Account Found (With Metadata)
+### 1. Account Found via Username (Full Profile & Metrics)
 ```json
 {
   "live": true,
@@ -134,7 +139,18 @@ curl --request POST \
 }
 ```
 
-### Account Not Found
+### 2. Account Found via Email (Registration Collision & Suggestions)
+```json
+{
+  "live": true,
+  "note": null,
+  "metadata": {
+    "suggested_usernames": ["cyber_analyst_2024", "alexsmith_sec"]
+  }
+}
+```
+
+### 3. Account Not Found
 ```json
 {
   "live": false,
